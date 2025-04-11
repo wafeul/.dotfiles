@@ -58,6 +58,7 @@ scripts=(
     wallpaper.sh
     lsd.sh
     nvim.sh
+    setup_environment.sh
 )
 
 for script in "${scripts[@]}"; do
