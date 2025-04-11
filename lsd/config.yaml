@@ -1,0 +1,10 @@
+classic: false
+icons:
+  when: auto
+  theme: fancy
+  separator: " > "
+
+date: '+%d %b %Y %X'
+
+symlink-arrow: ⇒
+
