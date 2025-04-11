@@ -117,5 +117,5 @@ export PATH="$PATH:$HOME/Labo/Softwares/nvim-linux64/bin:$HOME/.local/bin:$HOME/
 
 # Add tmuxifier to Path and init it
 export PATH="$HOME/.tmuxifier/bin:$PATH"
-export OPENAI_API_KEY=
+export OPENAI_API_KEY=""
 eval "$(tmuxifier init -)"
