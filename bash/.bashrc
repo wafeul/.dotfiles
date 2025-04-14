@@ -119,3 +119,6 @@ export PATH="$PATH:$HOME/Labo/Softwares/nvim-linux64/bin:$HOME/.local/bin:$HOME/
 export PATH="$HOME/.tmuxifier/bin:$PATH"
 export OPENAI_API_KEY=""
 eval "$(tmuxifier init -)"
+
+export VISUAL=vim
+export EDITOR=vim
