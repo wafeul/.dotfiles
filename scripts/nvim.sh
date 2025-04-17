@@ -2,8 +2,6 @@
 
 LAZY_CONFIG_FILE="$(dirname "${BASH_SOURCE[0]}")/../nvim/lazygit/config.yml"
 NVIM_CONFIG_FOLDER="$(dirname "${BASH_SOURCE[0]}")/../nvim/nvim"
-echo $NVIM_CONFIG_FOLDER
-exit 0
 
 # Source install_package from config.sh
 source "$(dirname "${BASH_SOURCE[0]}")/../config.sh"
