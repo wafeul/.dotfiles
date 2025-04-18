@@ -47,8 +47,9 @@ else
     # Install Node.js
     nvm install "$NODE_VERSION"
 
-    if ! command -v node &>/dev/null || [[ $(node -v) != "v$NODE_VERSION" ]]; then
-        echo "$FAIL Node.js installation failed. Please check the logs and try again."
+    # Verify the Node.js installation
+    if ! command -v node &>/dev/null || [[ ! "$(node -v)" =~ ^v$NODE_VERSION\..* ]]; then
+        echo -e "$FAIL Node.js installation failed. Please check the logs and try again."
         exit 1
     fi
 
