@@ -113,7 +113,7 @@ if [ -d ~/.config/nvim ]; then
     echo "Old Neovim config saved in ~/.config/nvim-old-config.tgz"
 fi
 
-cp -r nvim ~/.config/
+cp -r nvim/nvim ~/.config/
 sed -i "s/rbourgeas/$current_user/g" ~/.config/nvim/lua/plugins/none-ls.lua
 
 echo "Neovim installation and configuration completed!"
