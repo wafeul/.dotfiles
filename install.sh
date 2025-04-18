@@ -59,6 +59,7 @@ scripts=(
     lsd.sh
     nvim.sh
     setup_environment.sh
+    node.sh
 )
 
 for script in "${scripts[@]}"; do

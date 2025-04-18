@@ -27,3 +27,6 @@ install_package() {
         exit 1
     fi
 }
+
+NVM_VERSION="v0.40.2"
+NODE_VERSION="22"
