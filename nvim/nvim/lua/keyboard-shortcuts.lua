@@ -1,32 +1,44 @@
 ----------------------------------------------------------------------------------
+-- Copilot
+----------------------------------------------------------------------------------
+
+vim.keymap.set("i", "<C-j>", 'copilot#Accept("\\<CR>")', {
+    expr = true,
+    replace_keycodes = false,
+})
+vim.g.copilot_no_tab_map = true
+
+vim.keymap.set("i", "<C-l>", "<Plug>(copilot-accept-word)")
+----------------------------------------------------------------------------------
 -- Neoclip
 ----------------------------------------------------------------------------------
-vim.keymap.set('n', '<leader>nc', ":Telescope neoclip<CR>", {})
-
-
-
+vim.keymap.set("n", "<leader>nc", ":Telescope neoclip<CR>", {})
 
 ----------------------------------------------------------------------------------
--- Spectre 
+-- Spectre
 ----------------------------------------------------------------------------------
-vim.keymap.set('n', '<leader>S', '<cmd>lua require("spectre").toggle()<CR>', {
-    desc = "Toggle Spectre"
+vim.keymap.set("n", "<leader>S", '<cmd>lua require("spectre").toggle()<CR>', {
+    desc = "Toggle Spectre",
 })
-vim.keymap.set('n', '<leader>sw', '<cmd>lua require("spectre").open_visual({select_word=true})<CR>', {
-    desc = "Search current word"
+vim.keymap.set("n", "<leader>sw", '<cmd>lua require("spectre").open_visual({select_word=true})<CR>', {
+    desc = "Search current word",
 })
-vim.keymap.set('v', '<leader>sw', '<esc><cmd>lua require("spectre").open_visual()<CR>', {
-    desc = "Search current word"
+vim.keymap.set("v", "<leader>sw", '<esc><cmd>lua require("spectre").open_visual()<CR>', {
+    desc = "Search current word",
 })
-vim.keymap.set('n', '<leader>sp', '<cmd>lua require("spectre").open_file_search({select_word=true})<CR>', {
-    desc = "Search on current file"
+vim.keymap.set("n", "<leader>sp", '<cmd>lua require("spectre").open_file_search({select_word=true})<CR>', {
+    desc = "Search on current file",
 })
 
 ----------------------------------------------------------------------------------
 -- Neotest
 ----------------------------------------------------------------------------------
-vim.keymap.set('n', '<leader>tn', function() require('neotest').run.run() end)
-vim.keymap.set('n', '<leader>tf', function() require('neotest').run.run(vim.fn.expand('%')) end)
+vim.keymap.set("n", "<leader>tn", function()
+    require("neotest").run.run()
+end)
+vim.keymap.set("n", "<leader>tf", function()
+    require("neotest").run.run(vim.fn.expand("%"))
+end)
 
 ----------------------------------------------------------------------------------
 -- DAP
@@ -103,37 +115,37 @@ local select_opts = { behavior = cmp.SelectBehavior.Select }
 
 cmp.setup({
 
-	mapping = cmp.mapping.preset.insert({
-		["<C-b>"] = cmp.mapping.scroll_docs(-4),
-		["<C-f>"] = cmp.mapping.scroll_docs(4),
-		["<C-Space>"] = cmp.mapping.complete(),
-		["<C-e>"] = cmp.mapping.abort(),
-		["<CR>"] = cmp.mapping.confirm({ select = true }),
-		["<Up>"] = cmp.mapping.select_prev_item(select_opts),
-		["<Down>"] = cmp.mapping.select_next_item(select_opts),
-		["<Tab>"] = cmp.mapping(function(fallback)
-			local col = vim.fn.col(".") - 1
+    mapping = cmp.mapping.preset.insert({
+        ["<C-b>"] = cmp.mapping.scroll_docs(-4),
+        ["<C-f>"] = cmp.mapping.scroll_docs(4),
+        ["<C-Space>"] = cmp.mapping.complete(),
+        ["<C-e>"] = cmp.mapping.abort(),
+        ["<CR>"] = cmp.mapping.confirm({ select = true }),
+        ["<Up>"] = cmp.mapping.select_prev_item(select_opts),
+        ["<Down>"] = cmp.mapping.select_next_item(select_opts),
+        ["<Tab>"] = cmp.mapping(function(fallback)
+            local col = vim.fn.col(".") - 1
 
-			if cmp.visible() then
-				cmp.select_next_item(select_opts)
-			elseif luasnip.jumpable(1) then
-				luasnip.jump(1)
-			elseif col == 0 or vim.fn.getline("."):sub(col, col):match("%s") then
-				fallback()
-			else
-				cmp.complete()
-			end
-		end, { "i", "s" }),
-		["<S-Tab>"] = cmp.mapping(function(fallback)
-			if cmp.visible() then
-				cmp.select_prev_item(select_opts)
-			elseif luasnip.jumpable(-1) then
-				luasnip.jump(-1)
-			else
-				fallback()
-			end
-		end, { "i", "s" }),
-	}),
+            if cmp.visible() then
+                cmp.select_next_item(select_opts)
+            elseif luasnip.jumpable(1) then
+                luasnip.jump(1)
+            elseif col == 0 or vim.fn.getline("."):sub(col, col):match("%s") then
+                fallback()
+            else
+                cmp.complete()
+            end
+        end, { "i", "s" }),
+        ["<S-Tab>"] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+                cmp.select_prev_item(select_opts)
+            elseif luasnip.jumpable(-1) then
+                luasnip.jump(-1)
+            else
+                fallback()
+            end
+        end, { "i", "s" }),
+    }),
 })
 
 ----------------------------------------------------------------------------------
