@@ -22,7 +22,7 @@ local function open_nvim_tree()
     require("nvim-tree.api").tree.toggle({ focus = false, find_file = true })
 end
 
--- Create an autocommand to close NvimTree when quitting Neovim
+-- Close nvim-tree if it's the only window left in the tab
 vim.api.nvim_create_autocmd("QuitPre", {
   callback = function()
     local tree_wins = {}
@@ -46,6 +46,16 @@ vim.api.nvim_create_autocmd("QuitPre", {
   end
 })
 
+-- Disable hlsearch when moving the cursor
+vim.api.nvim_create_autocmd('CursorMoved', {
+  group = vim.api.nvim_create_augroup('auto-hlsearch', { clear = true }),
+  callback = function ()
+    if vim.v.hlsearch == 1 and vim.fn.searchcount().exact_match == 0 then
+      vim.schedule(function () vim.cmd.nohlsearch() end)
+    end
+  end
+})
 -- Call the open_nvim_tree function after all plugins has been loaded ("VimEnter"). If not here, not working with alpha plugin.
 vim.api.nvim_create_autocmd({ "VimEnter" }, { callback = open_nvim_tree })
 require("keyboard-shortcuts")
+
