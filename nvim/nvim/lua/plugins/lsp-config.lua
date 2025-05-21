@@ -33,6 +33,7 @@ return {
                     "dockerls",
                     "html",
                     "bashls",
+                    "pylsp",
                 },
             })
         end,
@@ -66,7 +67,7 @@ return {
             })
             lspconfig.dockerls.setup({
                 cmd = { "docker-langserver", "--stdio" },
-                filetypes = { "Dockerfile", "dockerfile" }
+                filetypes = { "Dockerfile", "dockerfile" },
             })
             lspconfig.phpactor.setup({
                 capabilities = capabilities,
@@ -74,6 +75,21 @@ return {
                 init_options = {
                     ["language_server_phpstan.enabled"] = false,
                     ["language_server_psalm.enabled"] = false,
+                },
+            })
+            lspconfig.pylsp.setup({
+                capabilities = capabilities,
+                settings = {
+                    pylsp = {
+                        plugins = {
+                            pycodestyle = { enabled = false },
+                            flake8 = { enabled = false },
+                            autopep8 = { enabled = false },
+                            yapf = { enabled = false },
+                            black = { enabled = true },
+                            pylint = { enabled = true },
+                        },
+                    },
                 },
             })
 
