@@ -114,6 +114,4 @@ if [ -d ~/.config/nvim ]; then
 fi
 
 cp -r nvim/nvim ~/.config/
-sed -i "s/rbourgeas/$current_user/g" ~/.config/nvim/lua/plugins/none-ls.lua
-
 echo "Neovim installation and configuration completed!"
