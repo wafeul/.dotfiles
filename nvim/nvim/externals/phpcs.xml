@@ -1,4 +1,12 @@
 <?xml version="1.0"?>
-<ruleset name="GlobalStandard">
+<ruleset name="Custom PHPCS Ruleset">
+    <description>Your custom PHPCS ruleset</description>
+
+    <!-- Base standard -->
     <rule ref="PSR12" />
+
+    <!-- Exclude specific rule -->
+    <rule ref="Generic.Files.LineLength">
+        <exclude name="Generic.Files.LineLength.MaxExceeded" />
+    </rule>
 </ruleset>
