@@ -83,6 +83,7 @@ scripts=(
     nvim.sh
     setup_environment.sh
     node.sh
+    liquidprompt.sh
 )
 
 for script in "${scripts[@]}"; do
