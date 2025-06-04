@@ -3,6 +3,9 @@
 # Use the icons defined in install.sh
 # $CHECK, $FAIL, and $INFO are already set by install.sh
 
+TMUX_CATPPUCCIN_ARCHIVE="./tmux/catppuccin_tmux.tgz"
+TMUX_CATPPUCCIN_DESTINATION="$HOME/.tmux/plugins/"
+
 source "$(dirname "${BASH_SOURCE[0]}")/../config.sh"
 
 # Check if tmux is installed
@@ -76,4 +79,18 @@ elif pgrep -x "wayland" >/dev/null && ! command -v wl-copy &>/dev/null; then
     install_package wl-clipboard
 else
     echo -e "$CHECK Clipboard utilities are already installed."
+fi
+
+# Extract catppuccin_tmux.tgz archive
+if [ -f "$TMUX_CATPPUCCIN_ARCHIVE" ]; then
+    echo "$INFO Extracting catppuccin_tmux.tgz to $TMUX_CATPPUCCIN_DESTINATION..."
+    mkdir -p "$TMUX_CATPPUCCIN_DESTINATION"
+    tar -xzf "$TMUX_CATPPUCCIN_ARCHIVE" -C "$TMUX_CATPPUCCIN_DESTINATION"
+    if [ $? -eq 0 ]; then
+        echo "$CHECK catppuccin_tmux successfully extracted."
+    else
+        echo "$FAIL Failed to extract catppuccin_tmux.tgz."
+    fi
+else
+    echo "$FAIL Archive $TMUX_CATPPUCCIN_ARCHIVE not found."
 fi
