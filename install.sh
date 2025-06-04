@@ -4,7 +4,30 @@ set -e
 
 echo -e "\n[*] Dotfiles installer starting..."
 
-# Step 0: Try installing Nerd Font first
+# Define a list of essential tools
+ESSENTIAL_TOOLS=("fc-cache" "unzip")
+
+# Function to check and install missing tools
+check_and_install_tools() {
+    for tool in "${ESSENTIAL_TOOLS[@]}"; do
+        if ! command -v "$tool" &>/dev/null; then
+            echo "$INFO Installing missing tool: $tool"
+            install_package "$tool"
+            if ! command -v "$tool" &>/dev/null; then
+                echo "$FAIL Failed to install $tool. Exiting..."
+                exit 1
+            fi
+            echo "$CHECK $tool installed successfully."
+        else
+            echo "$INFO $tool is already installed."
+        fi
+    done
+}
+
+# Call the function early in the script
+check_and_install_tools
+
+#Try installing Nerd Font first
 if fc-list | grep -qi "DejaVuSansMono"; then
     USE_ICONS=true
     echo -e "\n[✅] DejaVuSansMono Nerd Font is already installed."
@@ -22,7 +45,7 @@ else
     INFO="[>>]"
 fi
 
-echo -e "\n$CHECK Nerd Font status: $( [ "$USE_ICONS" = true ] && echo "enabled" || echo "fallback to ASCII mode" )"
+echo -e "\n$CHECK Nerd Font status: $([ "$USE_ICONS" = true ] && echo "enabled" || echo "fallback to ASCII mode")"
 
 # Detect distro and store it in variables
 if [ -f /etc/os-release ]; then
@@ -66,11 +89,13 @@ for script in "${scripts[@]}"; do
     echo -e "\nDo you want to run: ${script}?"
     select yn in "Yes" "No"; do
         case $yn in
-            Yes ) bash "scripts/${script}" "$DISTRO"; break ;;
-            No ) break ;;
+        Yes)
+            bash "scripts/${script}" "$DISTRO"
+            break
+            ;;
+        No) break ;;
         esac
     done
 done
 
 echo -e "\n$CHECK Dotfiles installation complete!"
-
