@@ -76,11 +76,6 @@ return {
                     ["language_server_phpstan.enabled"] = false,
                     ["language_server_psalm.enabled"] = false,
                 },
-                indexer = {
-                    include_patterns = {
-                        "~/.php-stubs/**/*.php",
-                    },
-                },
             })
             lspconfig.pylsp.setup({
                 capabilities = capabilities,
