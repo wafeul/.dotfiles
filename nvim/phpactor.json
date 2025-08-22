@@ -1,0 +1,18 @@
+{
+  "$schema": "https://phpactor.readthedocs.io/en/master/schema/phpactor.schema.json",
+  "indexer.enabled": true,
+  "indexer.include_patterns": [
+    "~/.config/nvim/lua/plugins/.php-stubs/**/**/*.php"
+  ],
+  "indexer.exclude_patterns": [
+    "vendor/**",
+    "tests/**"
+  ],
+  "completion_worse.enable_object_member_completion": true,
+  "completion_worse.enable_contextual_completion": true,
+  "completion_worse.import_globals": true,
+  "completion_worse.import_table": true,
+  "class_to_file.project_root": "/",
+  "xdebug_disable": true
+}
+
