@@ -20,10 +20,10 @@ alias sshProc1='ssh -X rbourgeas@htxproc1.htx-inext.embl.fr'
 alias sshProc1cr='ssh -X crimsrobot@htxproc1.htx-inext.embl.fr'
 alias sshrad='ssh -X root@raphaeldev.htx-web.embl.fr'
 alias sshgd='ssh root@gaeldev.htx-web.embl.fr'
-alias sshmplier='ssh hotline@crims.cbs.cnrs.fr'   # Mot2PasseTemp4Crims
+alias sshmplier='ssh hotline@crims.cbs.cnrs.fr'
 alias sshtest2='ssh root@test2.htx-web.embl.fr'
 alias sshtest1='ssh root@test1.htx-web.embl.fr'
-alias sshhamb='ssh rbourgeas@guldan.embl-hamburg.de' # mge(G6P/
+alias sshhamb='ssh rbourgeas@guldan.embl-hamburg.de'
 alias sshdt3='ssh datatransfer3.embl.fr'
 #Heidelberg
 alias sshdth='ssh -X rbourgeas@datatransfer.embl.de'
