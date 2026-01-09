@@ -13,6 +13,7 @@ vim.keymap.set("i", "<C-l>", "<Plug>(copilot-accept-word)")
 -- Neoclip
 ----------------------------------------------------------------------------------
 vim.keymap.set("n", "<leader>nc", ":Telescope neoclip<CR>", {})
+vim.keymap.set("n", "<leader>nm", ":Telescope macroscope<CR>", {})
 
 ----------------------------------------------------------------------------------
 -- Spectre

@@ -113,5 +113,16 @@ if [ -d ~/.config/nvim ]; then
     echo "Old Neovim config saved in ~/.config/nvim-old-config.tgz"
 fi
 
+# Handle phpactor stubs
+if [ ! -d ~/.config/phpactor/phpactor.json ]; then
+    echo "Creating phpactor config folder..."
+    mkdir -p ~/.config/phpactor
+fi
+if [ ! -f ~/.config/phpactor/phpactor.json ]; then
+    echo "Copying phpactor.json file..."
+    cp nvim/phpactor.json ~/.config/phpactor/phpactor.json
+fi
+
+
 cp -r nvim/nvim ~/.config/
 echo "Neovim installation and configuration completed!"
