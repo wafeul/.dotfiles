@@ -14,10 +14,6 @@ alias ps='ps -ceao ppid,pid,%cpu,%mem,bsdtime,user,pri,args'
 alias mc='~/minio-binaries/mc'
 
 #######   SERVERS CONNECTIONS   #######
-alias sshInext='ssh -X rbourgeas@inext1.htx-inext.embl.fr'
-alias sshInextcr='ssh -X crimsrobot@inext1.htx-inext.embl.fr'
-alias sshProc1='ssh -X rbourgeas@htxproc1.htx-inext.embl.fr'
-alias sshProc1cr='ssh -X crimsrobot@htxproc1.htx-inext.embl.fr'
 alias sshrad='ssh -X root@raphaeldev.htx-web.embl.fr'
 alias sshgd='ssh root@gaeldev.htx-web.embl.fr'
 alias sshmplier='ssh hotline@crims.cbs.cnrs.fr'
