@@ -4,19 +4,44 @@ set -e
 
 echo -e "\n[*] Dotfiles installer starting..."
 
+# Define install_package function to work across distros
+install_package() {
+    if command -v apt &>/dev/null; then
+        sudo apt update && sudo apt install -y "$@"
+    elif command -v dnf &>/dev/null; then
+        sudo dnf install -y "$@"
+    elif command -v yum &>/dev/null; then
+        sudo yum install -y "$@"
+    else
+        echo "$FAIL No supported package manager found (apt/dnf/yum)."
+        exit 1
+    fi
+}
+
 # Define a list of essential tools
-ESSENTIAL_TOOLS=("fc-cache" "unzip")
+declare -A ESSENTIAL_TOOLS=(
+    [fc-cache]="fontconfig"
+    [fc-list]="fontconfig"
+    [unzip]="unzip"
+)
+CHECK="[OK]"
+FAIL="[ERR]"
+INFO="[>>]"
 
 # Function to check and install missing tools
 check_and_install_tools() {
-    for tool in "${ESSENTIAL_TOOLS[@]}"; do
+    for tool in "${!ESSENTIAL_TOOLS[@]}"; do
+        package="${ESSENTIAL_TOOLS[$tool]}"
+
         if ! command -v "$tool" &>/dev/null; then
-            echo "$INFO Installing missing tool: $tool"
-            install_package "$tool"
+            echo "$INFO Installing missing tool: $tool (package: $package)"
+            install_package "$package"
+
             if ! command -v "$tool" &>/dev/null; then
                 echo "$FAIL Failed to install $tool. Exiting..."
                 exit 1
             fi
+
             echo "$CHECK $tool installed successfully."
         else
             echo "$INFO $tool is already installed."
@@ -58,20 +83,6 @@ else
 fi
 
 echo "$CHECK Detected OS: $DISTRO ($DISTRO_LIKE)"
-
-# Define install_package function to work across distros
-install_package() {
-    if command -v apt &>/dev/null; then
-        sudo apt update && sudo apt install -y "$@"
-    elif command -v dnf &>/dev/null; then
-        sudo dnf install -y "$@"
-    elif command -v yum &>/dev/null; then
-        sudo yum install -y "$@"
-    else
-        echo "$FAIL No supported package manager found (apt/dnf/yum)."
-        exit 1
-    fi
-}
 
 # Step-by-step interactive install of components
 scripts=(
