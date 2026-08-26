@@ -25,8 +25,8 @@ if ! grep -q "alias ls=" "$ALIASES_FILE"; then
     cat <<EOF >>"$ALIASES_FILE"
 # lsd aliases
 alias ls='lsd'
-alias ll='lsd -lhrth'
-alias la='lsd -lhrtAh'
+alias ll='lsd -lrth'
+alias la='lsd -lrtAh'
 EOF
     echo -e "$CHECK Aliases added successfully!"
 else
