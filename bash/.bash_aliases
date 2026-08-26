@@ -6,8 +6,8 @@ alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 
 alias ls='lsd'
-alias ll='lsd -lhrth'
-alias la='lsd -lhrtAh'
+alias ll='lsd -lrth'
+alias la='lsd -lrtAh'
 
 
 alias ps='ps -ceao ppid,pid,%cpu,%mem,bsdtime,user,pri,args'
@@ -16,9 +16,10 @@ alias mc='~/minio-binaries/mc'
 #######   SERVERS CONNECTIONS   #######
 alias sshrad='ssh -X root@raphaeldev.htx-web.embl.fr'
 alias sshgd='ssh root@gaeldev.htx-web.embl.fr'
-alias sshmplier='ssh hotline@crims.cbs.cnrs.fr'
+alias sshmplier='ssh hotline@194.167.34.240'
 alias sshtest2='ssh root@test2.htx-web.embl.fr'
-alias sshtest1='ssh root@test1.htx-web.embl.fr'
+alias sshbd='ssh rbourgeas@bennydev.htx-web.embl.fr'
+alias sshtd= 'ssh root@tanujadev.htx-web.embl.fr'
 alias sshhamb='ssh rbourgeas@guldan.embl-hamburg.de'
 alias sshdt3='ssh datatransfer3.embl.fr'
 #Heidelberg
