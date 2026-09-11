@@ -19,11 +19,13 @@ if ! nvim -v &>/dev/null; then
         install_package curl
     fi
 
+    # Chexk if tree-sitter is installed, and install if necessary
+
     # Download and install Neovim AppImage
     echo "[$INFO] Downloading Neovim AppImage..."
-    curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
-    chmod u+x nvim.appimage
-    sudo mv nvim.appimage /usr/local/bin/nvim
+    curl -LO https://github.com/neovim/neovim/releases/download/v0.12.5/nvim-linux-x86_64.appimage
+    chmod a+x nvim-linux-x86_64.appimage
+    sudo mv nvim-linux-x86_64.appimage /usr/local/bin/nvim
 
     echo "[$CHECK] Neovim has been installed. You can launch it with '/usr/local/bin/nvim'."
 

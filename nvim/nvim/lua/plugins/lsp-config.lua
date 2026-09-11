@@ -44,7 +44,8 @@ return {
 		lazy = false,
 		config = function()
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
-			local lspconfig = require("lspconfig")
+			local util = require("lspconfig.util")
+
 			local sign = function(opts)
 				vim.fn.sign_define(opts.name, {
 					texthl = opts.name,
@@ -52,11 +53,6 @@ return {
 					numhl = "",
 				})
 			end
-
-			lspconfig.lua_ls.setup({
-				capabilities = capabilities,
-			})
-			local util = require("lspconfig.util")
 
 			local function check_angular_deps(root_dir)
 				local missing = {}
@@ -75,10 +71,15 @@ return {
 				end
 			end
 
-			lspconfig.angularls.setup({
+			vim.lsp.config("lua_ls", {
+				capabilities = capabilities,
+			})
+
+			vim.lsp.config("angularls", {
 				capabilities = capabilities,
 				on_new_config = function(new_config, root_dir)
-					check_angular_deps(root_dir) -- ✅ triggers Telescope popup for missing deps
+					check_angular_deps(root_dir)
+
 					new_config.cmd = {
 						"ngserver",
 						"--stdio",
@@ -90,17 +91,20 @@ return {
 				end,
 			})
 
-			lspconfig.html.setup({
+			vim.lsp.config("html", {
 				capabilities = capabilities,
 			})
-			lspconfig.bashls.setup({
+
+			vim.lsp.config("bashls", {
 				capabilities = capabilities,
 			})
-			lspconfig.dockerls.setup({
+
+			vim.lsp.config("dockerls", {
 				cmd = { "docker-langserver", "--stdio" },
 				filetypes = { "Dockerfile", "dockerfile" },
 			})
-			lspconfig.phpactor.setup({
+
+			vim.lsp.config("phpactor", {
 				capabilities = capabilities,
 				on_attach = on_attach,
 				init_options = {
@@ -108,7 +112,8 @@ return {
 					["language_server_psalm.enabled"] = false,
 				},
 			})
-			lspconfig.pylsp.setup({
+
+			vim.lsp.config("pylsp", {
 				capabilities = capabilities,
 				settings = {
 					pylsp = {
@@ -124,6 +129,16 @@ return {
 				},
 			})
 
+			vim.lsp.enable({
+				"lua_ls",
+				"angularls",
+				"html",
+				"bashls",
+				"dockerls",
+				"phpactor",
+				"pylsp",
+			})
+
 			sign({ name = "DiagnosticSignError", text = "✘" })
 			sign({ name = "DiagnosticSignWarn", text = "▲" })
 			sign({ name = "DiagnosticSignHint", text = "⚑" })
@@ -137,6 +152,7 @@ return {
 					source = "always",
 				},
 			})
+
 			vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
 
 			vim.lsp.handlers["textDocument/signatureHelp"] =
