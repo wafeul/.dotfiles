@@ -3,12 +3,30 @@
 
 source "$(dirname "${BASH_SOURCE[0]}")/../config.sh"
 
-# Check if opencode is already installed
-if command -v opencode &>/dev/null; then
-    echo "$INFO OpenCode is already installed."
+# User who invoked the installer, even when this script runs via sudo
+REAL_USER="${SUDO_USER:-$(id -un)}"
+REAL_HOME="$(getent passwd "$REAL_USER" | cut -d: -f6)"
+
+# Check if opencode is already installed for the target user
+if sudo -u "$REAL_USER" env HOME="$REAL_HOME" PATH="$REAL_HOME/.opencode/bin:$PATH" \
+	command -v opencode &>/dev/null; then
+	echo "$INFO OpenCode is already installed."
 else
-    echo "$INFO Installing OpenCode..."
-    curl -fsSL https://opencode.ai/install | bash
-    echo "$CHECK OpenCode installed successfully."
+	echo "$INFO Installing OpenCode for $REAL_USER..."
+
+	sudo -u "$REAL_USER" env HOME="$REAL_HOME" \
+		bash -c 'curl -fsSL https://opencode.ai/install | bash'
+
+	echo "$CHECK OpenCode installed successfully."
 fi
 
+echo "$INFO Setting up OpenCode..."
+
+BASHRC="$REAL_HOME/.bashrc"
+OPENCODE_PATH='export PATH="$HOME/.opencode/bin:$PATH"'
+
+if ! grep -qF "$OPENCODE_PATH" "$BASHRC" 2>/dev/null; then
+	echo "$OPENCODE_PATH" >>"$BASHRC"
+	chown "$REAL_USER:$REAL_USER" "$BASHRC"
+	echo "$INFO Added OpenCode to PATH in $BASHRC"
+fi
