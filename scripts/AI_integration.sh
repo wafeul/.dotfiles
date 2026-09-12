@@ -26,3 +26,16 @@ if ! grep -qF "$OPENCODE_PATH" "$BASHRC" 2>/dev/null; then
 	chown "$REAL_USER:$REAL_USER" "$BASHRC"
 	echo "$INFO Added OpenCode to PATH in $BASHRC"
 fi
+
+# Configure opencode to use gitnexus through mcp
+echo '
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "gitnexus": {
+      "command": "npx",
+      "args": ["-y", "gitnexus@latest", "mcp"]
+    }
+  }
+}
+' | sudo -u "$REAL_USER" tee "$REAL_HOME/.opencode/config.json" >/dev/null'
