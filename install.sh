@@ -96,6 +96,7 @@ scripts=(
     setup_environment.sh
     node.sh
     liquidprompt.sh
+    AI_integration.sh
 )
 
 for script in "${scripts[@]}"; do
