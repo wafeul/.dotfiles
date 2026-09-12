@@ -38,4 +38,4 @@ echo '
     }
   }
 }
-' | sudo -u "$REAL_USER" tee "$REAL_HOME/.opencode/config.json" >/dev/null'
+' | sudo -u "$REAL_USER" tee "$REAL_HOME/.opencode/config.json" >/dev/null
