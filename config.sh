@@ -27,6 +27,10 @@ install_package() {
         exit 1
     fi
 }
+#
+# User who invoked the installer, even when this script runs via sudo
+REAL_USER="${SUDO_USER:-$(id -un)}"
+REAL_HOME="$(getent passwd "$REAL_USER" | cut -d: -f6)"
 
 NVM_VERSION="v0.40.2"
 NODE_VERSION="22"

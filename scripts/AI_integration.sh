@@ -3,10 +3,6 @@
 
 source "$(dirname "${BASH_SOURCE[0]}")/../config.sh"
 
-# User who invoked the installer, even when this script runs via sudo
-REAL_USER="${SUDO_USER:-$(id -un)}"
-REAL_HOME="$(getent passwd "$REAL_USER" | cut -d: -f6)"
-
 # Check if opencode is already installed for the target user
 if sudo -u "$REAL_USER" env HOME="$REAL_HOME" PATH="$REAL_HOME/.opencode/bin:$PATH" \
 	command -v opencode &>/dev/null; then
