@@ -10,10 +10,25 @@ if sudo -u "$REAL_USER" env HOME="$REAL_HOME" PATH="$REAL_HOME/.opencode/bin:$PA
 else
 	echo "$INFO Installing OpenCode for $REAL_USER..."
 
-#	sudo -u "$REAL_USER" env HOME="$REAL_HOME" \
-#		bash -c 'curl -fsSL https://opencode.ai/install | bash'
+	#	sudo -u "$REAL_USER" env HOME="$REAL_HOME" \
+	#		bash -c 'curl -fsSL https://opencode.ai/install | bash'
 
 	echo "$CHECK OpenCode installed successfully."
+fi
+
+# Install GitNexus for the target user
+GITNEXUS_BIN="$REAL_HOME/.local/bin/gitnexus"
+
+if [[ -x "$GITNEXUS_BIN" ]]; then
+	echo "$INFO GitNexus is already installed."
+else
+	echo "$INFO Installing GitNexus for $REAL_USER..."
+
+	sudo -u "$REAL_USER" env \
+		HOME="$REAL_HOME" \
+		npm install -g --prefix "$REAL_HOME/.local" gitnexus
+
+	echo "$CHECK GitNexus installed successfully."
 fi
 
 echo "$INFO Setting up OpenCode..."
@@ -27,6 +42,8 @@ if ! grep -qF "$OPENCODE_PATH" "$BASHRC" 2>/dev/null; then
 	echo "$INFO Added OpenCode to PATH in $BASHRC"
 fi
 
+sudo -u "$REAL_USER" mkdir -p "$REAL_HOME/.config/opencode"
+
 cat <<EOF | sudo -u "$REAL_USER" tee "$REAL_HOME/.config/opencode/opencode.json" >/dev/null
 {
   "\$schema": "https://opencode.ai/config.json",
@@ -34,7 +51,7 @@ cat <<EOF | sudo -u "$REAL_USER" tee "$REAL_HOME/.config/opencode/opencode.json"
     "servers": {
       "gitnexus": {
         "type": "local",
-        "command": ["npx", "-y", "gitnexus@latest", "mcp"]
+        "command": ["$REAL_HOME/.local/bin/gitnexus", "mcp"]
       }
     }
   }
