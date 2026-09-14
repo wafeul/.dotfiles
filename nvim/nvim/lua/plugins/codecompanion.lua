@@ -7,10 +7,34 @@ return {
 
 		config = function()
 			require("codecompanion").setup({
+				adapters = {
+					acp = {
+						codex = function()
+							return require("codecompanion.adapters").extend("codex", {
+								defaults = {
+									auth_method = "chat-gpt",
+									mcpServers = "inherit_from_config",
+								},
+							})
+						end,
+					},
+				},
+
 				interactions = {
 					chat = {
-						adapter = {
-							name = "opencode",
+						adapter = "codex",
+					},
+				},
+
+				mcp = {
+					servers = {
+						gitnexus = {
+							cmd = {
+								"npx",
+								"-y",
+								"gitnexus@latest",
+								"mcp",
+							},
 						},
 					},
 				},

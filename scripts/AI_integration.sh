@@ -3,17 +3,34 @@
 
 source "$(dirname "${BASH_SOURCE[0]}")/../config.sh"
 
-# Check if opencode is already installed for the target user
-if sudo -u "$REAL_USER" env HOME="$REAL_HOME" PATH="$REAL_HOME/.opencode/bin:$PATH" \
-	command -v opencode &>/dev/null; then
-	echo "$INFO OpenCode is already installed."
+# # Check if Codex CLI is already installed for the target user
+CODEX_BIN="$REAL_HOME/.local/bin/codex"
+
+if [[ -x "$CODEX_BIN" ]]; then
+	echo "$INFO Codex CLI is already installed."
 else
-	echo "$INFO Installing OpenCode for $REAL_USER..."
+	echo "$INFO Installing Codex CLI for $REAL_USER..."
 
-	#	sudo -u "$REAL_USER" env HOME="$REAL_HOME" \
-	#		bash -c 'curl -fsSL https://opencode.ai/install | bash'
+	sudo -u "$REAL_USER" env \
+		HOME="$REAL_HOME" \
+		npm install -g --prefix "$REAL_HOME/.local" @openai/codex
 
-	echo "$CHECK OpenCode installed successfully."
+	echo "$CHECK Codex CLI installed successfully."
+fi
+
+# Check if Codex ACP is already installed for the target user
+CODEX_ACP_BIN="$REAL_HOME/.local/bin/codex-acp"
+
+if [[ -x "$CODEX_ACP_BIN" ]]; then
+	echo "$INFO Codex ACP is already installed."
+else
+	echo "$INFO Installing Codex ACP for $REAL_USER..."
+
+	sudo -u "$REAL_USER" env \
+		HOME="$REAL_HOME" \
+		npm install -g --prefix "$REAL_HOME/.local" @agentclientprotocol/codex-acp
+
+	echo "$CHECK Codex ACP installed successfully."
 fi
 
 # Install GitNexus for the target user
@@ -31,29 +48,13 @@ else
 	echo "$CHECK GitNexus installed successfully."
 fi
 
-echo "$INFO Setting up OpenCode..."
+echo "$INFO Ensuring user-local npm binaries are on PATH..."
 
 BASHRC="$REAL_HOME/.bashrc"
-OPENCODE_PATH='export PATH="$HOME/.opencode/bin:$PATH"'
+LOCAL_BIN_PATH='export PATH="$HOME/.local/bin:$PATH"'
 
-if ! grep -qF "$OPENCODE_PATH" "$BASHRC" 2>/dev/null; then
-	echo "$OPENCODE_PATH" >>"$BASHRC"
+if ! grep -qF "$LOCAL_BIN_PATH" "$BASHRC" 2>/dev/null; then
+	echo "$LOCAL_BIN_PATH" >>"$BASHRC"
 	chown "$REAL_USER:$REAL_USER" "$BASHRC"
-	echo "$INFO Added OpenCode to PATH in $BASHRC"
+	echo "$INFO Added user-local npm binaries to PATH in $BASHRC"
 fi
-
-sudo -u "$REAL_USER" mkdir -p "$REAL_HOME/.config/opencode"
-
-cat <<EOF | sudo -u "$REAL_USER" tee "$REAL_HOME/.config/opencode/opencode.json" >/dev/null
-{
-  "\$schema": "https://opencode.ai/config.json",
-  "mcp": {
-    "servers": {
-      "gitnexus": {
-        "type": "local",
-        "command": ["$REAL_HOME/.local/bin/gitnexus", "mcp"]
-      }
-    }
-  }
-}
-EOF
