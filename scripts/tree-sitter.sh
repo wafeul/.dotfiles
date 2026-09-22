@@ -64,11 +64,11 @@ if ! command -v cargo &>/dev/null; then
     . "$HOME/.cargo/env"
 fi
 
-if ! cargo install tree-sitter-cli --version "$TS_REQ"; then
+if ! cargo install tree-sitter-cli --version ">=$TS_REQ"; then
     echo "$INFO Distro cargo/rustc too old; installing latest stable via rustup and retrying..."
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable >/dev/null
     . "$HOME/.cargo/env"
-    cargo install tree-sitter-cli --version "$TS_REQ"
+    cargo install tree-sitter-cli --version ">=$TS_REQ"
 fi
 sudo install -m 755 "$HOME/.cargo/bin/tree-sitter" /usr/local/bin/tree-sitter
 
