@@ -88,37 +88,9 @@ for soft in "composer" "npm" "rg" "fdfind"; do
     fi
 done
 
-# tree-sitter-cli is required by nvim-treesitter (>= 0.26.1).
-# Install from the distro package manager; fall back to the prebuilt binary.
-install_tree_sitter_cli() {
-    local have=""
-    if command -v tree-sitter &>/dev/null; then
-        have="$(tree-sitter --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -n1)"
-        if [[ -n "$have" ]] && [[ "$have" == "0.26.1" || "$(printf '%s\n' "$have" "0.26.1" | sort -V | head -n1)" == "0.26.1" ]]; then
-            echo "$CHECK tree-sitter-cli $have is installed."
-            return 0
-        fi
-    fi
-
-    echo "$INFO Installing tree-sitter-cli >= 0.26.1..."
-    if install_package tree-sitter-cli 2>/dev/null && TS_NEW="$(tree-sitter --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -n1)" \
-        && [[ -n "$TS_NEW" ]] && [[ "$(printf '%s\n' "$TS_NEW" "0.26.1" | sort -V | head -n1)" == "0.26.1" ]]; then
-        :
-    else
-        echo "$INFO Falling back to prebuilt tree-sitter-cli binary."
-        curl -Lo /tmp/tree-sitter-cli.zip \
-            https://github.com/tree-sitter/tree-sitter/releases/latest/download/tree-sitter-cli-linux-x64.zip
-        sudo unzip -o /tmp/tree-sitter-cli.zip -d /usr/local/bin
-        rm -f /tmp/tree-sitter-cli.zip
-    fi
-
-    if ! command -v tree-sitter &>/dev/null; then
-        echo "$FAIL tree-sitter-cli installation failed."
-        exit 1
-    fi
-    echo "$CHECK tree-sitter-cli installed: $(tree-sitter --version)"
-}
-install_tree_sitter_cli
+# tree-sitter-cli is required by nvim-treesitter (>= 0.26.1). Install it via the
+# dedicated script so the CLI bootstrap can be maintained/tested independently.
+bash "$REPO_ROOT/scripts/tree-sitter.sh"
 
 # Handle LazyGit installation
 if ! lazygit --version &>/dev/null; then
