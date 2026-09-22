@@ -22,7 +22,10 @@ return {
 
 				interactions = {
 					chat = {
-						adapter = "codex",
+						adapter = {
+							name = "codex",
+							model = "gpt-5.6-terra",
+						},
 					},
 				},
 
