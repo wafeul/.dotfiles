@@ -22,6 +22,10 @@ return {
 	{
 		"williamboman/mason-lspconfig.nvim",
 		lazy = false,
+		dependencies = {
+			"williamboman/mason.nvim",
+			"neovim/nvim-lspconfig",
+		},
 		config = function()
 			require("mason-lspconfig").setup({
 				ensure_installed = {
@@ -105,8 +109,19 @@ return {
 			})
 
 			vim.lsp.config("phpactor", {
+				cmd = {
+					vim.fn.stdpath("data") .. "/mason/bin/phpactor",
+					"language-server",
+				},
+				filetypes = { "php" },
+				root_markers = {
+					"composer.json",
+					".git",
+					".phpactor.json",
+					".phpactor.yml",
+				},
+				workspace_required = true,
 				capabilities = capabilities,
-				on_attach = on_attach,
 				init_options = {
 					["language_server_phpstan.enabled"] = false,
 					["language_server_psalm.enabled"] = false,
