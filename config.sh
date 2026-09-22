@@ -1,13 +1,13 @@
 # Function to check if DejaVuSansMono Nerd Font is installed
 has_nerdfont() {
-    fc-list | grep -qi "DejaVuSansMono"
+    fc-list | grep -qi "DejaVuSansMono Nerd Font"
 }
 
 if has_nerdfont; then
     USE_ICONS=true
     CHECK="[✅]"
     FAIL="[❌]"
-    INFO="[ℹ️]]"
+    INFO="[ℹ️]"
 else
     USE_ICONS=false
     CHECK="[OK]"

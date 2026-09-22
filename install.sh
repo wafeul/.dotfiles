@@ -4,19 +4,8 @@ set -e
 
 echo -e "\n[*] Dotfiles installer starting..."
 
-# Define install_package function to work across distros
-install_package() {
-    if command -v apt &>/dev/null; then
-        sudo apt update && sudo apt install -y "$@"
-    elif command -v dnf &>/dev/null; then
-        sudo dnf install -y "$@"
-    elif command -v yum &>/dev/null; then
-        sudo yum install -y "$@"
-    else
-        echo "$FAIL No supported package manager found (apt/dnf/yum)."
-        exit 1
-    fi
-}
+# Source shared helpers (install_package, has_nerdfont, CHECK/FAIL/INFO) from config.sh
+source "$(dirname "${BASH_SOURCE[0]}")/config.sh"
 
 # Define a list of essential tools
 declare -A ESSENTIAL_TOOLS=(
@@ -24,9 +13,6 @@ declare -A ESSENTIAL_TOOLS=(
     [fc-list]="fontconfig"
     [unzip]="unzip"
 )
-CHECK="[OK]"
-FAIL="[ERR]"
-INFO="[>>]"
 
 # Function to check and install missing tools
 check_and_install_tools() {
@@ -53,7 +39,7 @@ check_and_install_tools() {
 check_and_install_tools
 
 #Try installing Nerd Font first
-if fc-list | grep -qi "DejaVuSansMono"; then
+if has_nerdfont; then
     USE_ICONS=true
     echo -e "\n[✅] DejaVuSansMono Nerd Font is already installed."
 else
@@ -63,7 +49,7 @@ fi
 if [ "$USE_ICONS" = true ]; then
     CHECK="[✅]"
     FAIL="[❌]"
-    INFO="[ℹ️]]"
+    INFO="[ℹ️]"
 else
     CHECK="[OK]"
     FAIL="[ERR]"
