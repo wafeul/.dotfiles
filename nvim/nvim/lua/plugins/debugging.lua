@@ -2,18 +2,27 @@ return {
 	"mfussenegger/nvim-dap",
 	dependencies = {
 		"rcarriga/nvim-dap-ui",
-        "theHamsta/nvim-dap-virtual-text",
+		"theHamsta/nvim-dap-virtual-text",
 		"nvim-treesitter/nvim-treesitter",
 		"nvim-neotest/nvim-nio",
+		"williamboman/mason.nvim",
 	},
 	config = function()
 		local dap = require("dap")
 		local dapui = require("dapui")
 
+		-- Install the PHP debug adapter via mason if missing
+		local registry = require("mason-registry")
+		if not registry.is_installed("php-debug-adapter") then
+			local pkg = registry.get_package("php-debug-adapter")
+			if pkg then
+				pkg:install()
+			end
+		end
+
 		dap.adapters.php = {
 			type = "executable",
-			command = "node",
-			args = { "~/nvim-config/externals/vscode-php-debug/out/phpDebug.js" },
+			command = vim.fn.stdpath("data") .. "/mason/bin/php-debug-adapter",
 		}
 
 		dap.configurations.php = {

@@ -11,10 +11,6 @@ return {
 						package_uninstalled = "✗",
 					},
 				},
-				ensure_installed = {
-					"json-to-sruct",
-					"easy-coding-standard",
-				},
 			})
 		end,
 	},
@@ -49,14 +45,6 @@ return {
 		config = function()
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
 			local util = require("lspconfig.util")
-
-			local sign = function(opts)
-				vim.fn.sign_define(opts.name, {
-					texthl = opts.name,
-					text = opts.text,
-					numhl = "",
-				})
-			end
 
 			local function check_angular_deps(root_dir)
 				local missing = {}
@@ -144,6 +132,14 @@ return {
 				},
 			})
 
+			vim.lsp.config("jsonls", {
+				capabilities = capabilities,
+			})
+
+			vim.lsp.config("vimls", {
+				capabilities = capabilities,
+			})
+
 			vim.lsp.enable({
 				"lua_ls",
 				"angularls",
@@ -152,26 +148,26 @@ return {
 				"dockerls",
 				"phpactor",
 				"pylsp",
+				"jsonls",
+				"vimls",
 			})
-
-			sign({ name = "DiagnosticSignError", text = "✘" })
-			sign({ name = "DiagnosticSignWarn", text = "▲" })
-			sign({ name = "DiagnosticSignHint", text = "⚑" })
-			sign({ name = "DiagnosticSignInfo", text = "»" })
 
 			vim.diagnostic.config({
 				virtual_text = true,
 				severity_sort = true,
+				signs = {
+					text = {
+						[vim.diagnostic.severity.ERROR] = "✘",
+						[vim.diagnostic.severity.WARN] = "▲",
+						[vim.diagnostic.severity.HINT] = "⚑",
+						[vim.diagnostic.severity.INFO] = "»",
+					},
+				},
 				float = {
 					border = "rounded",
 					source = "always",
 				},
 			})
-
-			vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
-
-			vim.lsp.handlers["textDocument/signatureHelp"] =
-				vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" })
 		end,
 	},
 }

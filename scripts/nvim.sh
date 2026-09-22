@@ -1,10 +1,12 @@
 #!/bin/bash
 
-LAZY_CONFIG_FILE="$(dirname "${BASH_SOURCE[0]}")/../nvim/lazygit/config.yml"
-NVIM_CONFIG_FOLDER="$(dirname "${BASH_SOURCE[0]}")/../nvim/nvim"
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+LAZY_CONFIG_FILE="$REPO_ROOT/nvim/lazygit/config.yml"
+NVIM_CONFIG_FOLDER="$REPO_ROOT/nvim/nvim"
+PHPACTOR_CONFIG_FILE="$REPO_ROOT/nvim/phpactor.json"
 
-# Source install_package from config.sh
-source "$(dirname "${BASH_SOURCE[0]}")/../config.sh"
+# Source install_package and shared variables from config.sh
+source "$REPO_ROOT/config.sh"
 
 # Check if the current user is valid
 current_user=$(whoami)
@@ -19,13 +21,18 @@ if ! nvim -v &>/dev/null; then
         install_package curl
     fi
 
-    # Chexk if tree-sitter is installed, and install if necessary
+    # Download and install the latest Neovim release (Linux x86_64 tar.gz)
+    echo "[$INFO] Downloading latest Neovim..."
+    curl -Lo /tmp/nvim-linux-x86_64.tar.gz \
+        https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
 
-    # Download and install Neovim AppImage
-    echo "[$INFO] Downloading Neovim AppImage..."
-    curl -LO https://github.com/neovim/neovim/releases/download/v0.12.5/nvim-linux-x86_64.appimage
-    chmod a+x nvim-linux-x86_64.appimage
-    sudo mv nvim-linux-x86_64.appimage /usr/local/bin/nvim
+    echo "[$INFO] Installing Neovim to /opt/nvim-linux-x86_64..."
+    sudo rm -rf /opt/nvim-linux-x86_64
+    sudo tar -C /opt -xzf /tmp/nvim-linux-x86_64.tar.gz
+    rm -f /tmp/nvim-linux-x86_64.tar.gz
+
+    # Expose nvim on PATH without requiring /opt to be on it
+    sudo ln -sf /opt/nvim-linux-x86_64/bin/nvim /usr/local/bin/nvim
 
     echo "[$CHECK] Neovim has been installed. You can launch it with '/usr/local/bin/nvim'."
 
@@ -81,6 +88,38 @@ for soft in "composer" "npm" "rg" "fdfind"; do
     fi
 done
 
+# tree-sitter-cli is required by nvim-treesitter (>= 0.26.1).
+# Install from the distro package manager; fall back to the prebuilt binary.
+install_tree_sitter_cli() {
+    local have=""
+    if command -v tree-sitter &>/dev/null; then
+        have="$(tree-sitter --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -n1)"
+        if [[ -n "$have" ]] && [[ "$have" == "0.26.1" || "$(printf '%s\n' "$have" "0.26.1" | sort -V | head -n1)" == "0.26.1" ]]; then
+            echo "$CHECK tree-sitter-cli $have is installed."
+            return 0
+        fi
+    fi
+
+    echo "$INFO Installing tree-sitter-cli >= 0.26.1..."
+    if install_package tree-sitter-cli 2>/dev/null && TS_NEW="$(tree-sitter --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -n1)" \
+        && [[ -n "$TS_NEW" ]] && [[ "$(printf '%s\n' "$TS_NEW" "0.26.1" | sort -V | head -n1)" == "0.26.1" ]]; then
+        :
+    else
+        echo "$INFO Falling back to prebuilt tree-sitter-cli binary."
+        curl -Lo /tmp/tree-sitter-cli.zip \
+            https://github.com/tree-sitter/tree-sitter/releases/latest/download/tree-sitter-cli-linux-x64.zip
+        sudo unzip -o /tmp/tree-sitter-cli.zip -d /usr/local/bin
+        rm -f /tmp/tree-sitter-cli.zip
+    fi
+
+    if ! command -v tree-sitter &>/dev/null; then
+        echo "$FAIL tree-sitter-cli installation failed."
+        exit 1
+    fi
+    echo "$CHECK tree-sitter-cli installed: $(tree-sitter --version)"
+}
+install_tree_sitter_cli
+
 # Handle LazyGit installation
 if ! lazygit --version &>/dev/null; then
     echo "Lazygit is not installed. Installing Lazygit..."
@@ -116,15 +155,14 @@ if [ -d ~/.config/nvim ]; then
 fi
 
 # Handle phpactor stubs
-if [ ! -d ~/.config/phpactor/phpactor.json ]; then
+if [ ! -d ~/.config/phpactor ]; then
     echo "Creating phpactor config folder..."
     mkdir -p ~/.config/phpactor
 fi
 if [ ! -f ~/.config/phpactor/phpactor.json ]; then
     echo "Copying phpactor.json file..."
-    cp nvim/phpactor.json ~/.config/phpactor/phpactor.json
+    cp "$PHPACTOR_CONFIG_FILE" ~/.config/phpactor/phpactor.json
 fi
 
-
-cp -r nvim/nvim ~/.config/
+cp -r "$NVIM_CONFIG_FOLDER" ~/.config/
 echo "Neovim installation and configuration completed!"

@@ -10,7 +10,6 @@ return {
 	version = "^1.0.0", -- optional: only update when a new 1.x version is released
 
 	config = function()
-		vim.g.barbar_auto_setup = false -- disable auto-setup
 		require("barbar").setup({
 			-- Enable/disable animations
 			animation = true,

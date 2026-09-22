@@ -8,12 +8,14 @@ return {
 		"V13Axel/neotest-pest",
 	},
 	config = function()
-		adapters = {
-			require("neotest-pest")({
-				dap = { justMyCode = false },
-			}),
-			ignore_dirs = { "vendor" },
-			test_file_suffixes = { "Test.php" },
-		}
+		require("neotest").setup({
+			adapters = {
+				require("neotest-pest")({
+					dap = { justMyCode = false },
+					ignore_dirs = { "vendor" },
+					test_file_suffixes = { "Test.php" },
+				}),
+			},
+		})
 	end,
 }

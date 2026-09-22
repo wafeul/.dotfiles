@@ -111,13 +111,6 @@ set matchpairs+=<:> " use % to jump between pairs
 set backupdir=~/.vim/backups " Where backups will go. 
 set directory=~/.vim/tmp     " Where temporary files will go. 
 set background=dark " useful for vimdiff, really awful if not set
-"if has('nvim')
-"    " colorscheme apprentice
-"    colorscheme catppuccin
-"endif
-if !has('nvim')
-    colorscheme apprentice
-endif
 
 "-------------------------------------------------------------------------
 "			MAPS

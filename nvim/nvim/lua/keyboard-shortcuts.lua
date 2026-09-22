@@ -45,10 +45,15 @@ end)
 -- DAP
 ----------------------------------------------------------------------------------
 
-local dap = require("dap")
-vim.keymap.set("n", "<leader>dt", dap.toggle_breakpoint, {})
-vim.keymap.set("n", "<leader>dc", dap.continue, {})
-vim.keymap.set("n", "<leader>du", ":lua require'dapui'.toggle()<cr>", {})
+vim.keymap.set("n", "<leader>dt", function()
+	require("dap").toggle_breakpoint()
+end)
+vim.keymap.set("n", "<leader>dc", function()
+	require("dap").continue()
+end)
+vim.keymap.set("n", "<leader>du", function()
+	require("dapui").toggle()
+end)
 
 ----------------------------------------------------------------------------------
 -- Transparent
@@ -67,11 +72,18 @@ vim.keymap.set("n", "<leader>lc", ":LazyGitConfig<CR>", {})
 -- Telescope
 ----------------------------------------------------------------------------------
 
-local builtin = require("telescope.builtin")
-vim.keymap.set("n", "<leader>ff", builtin.find_files, {})
-vim.keymap.set("n", "<leader>fg", builtin.live_grep, {})
-vim.keymap.set("n", "<leader>fb", builtin.buffers, {})
-vim.keymap.set("n", "<leader>fh", builtin.help_tags, {})
+vim.keymap.set("n", "<leader>ff", function()
+	require("telescope.builtin").find_files()
+end)
+vim.keymap.set("n", "<leader>fg", function()
+	require("telescope.builtin").live_grep()
+end)
+vim.keymap.set("n", "<leader>fb", function()
+	require("telescope.builtin").buffers()
+end)
+vim.keymap.set("n", "<leader>fh", function()
+	require("telescope.builtin").help_tags()
+end)
 
 ----------------------------------------------------------------------------------
 -- NvimTree
@@ -91,7 +103,7 @@ vim.keymap.set("n", "gD", vim.lsp.buf.declaration, {})
 vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, {})
 vim.keymap.set("n", "[d", vim.diagnostic.goto_prev)
 vim.keymap.set("n", "]d", vim.diagnostic.goto_next)
-vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, {})
+vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, {})
 
 vim.keymap.set("n", "<leader>gf", vim.lsp.buf.format, {})
 
@@ -105,49 +117,6 @@ vim.keymap.set("n", "<leader>lx", function()
 		underline = isLspDiagnosticsVisible,
 	})
 end)
-
-----------------------------------------------------------------------------------
--- Completion
-----------------------------------------------------------------------------------
-
-local cmp = require("cmp")
-local luasnip = require("luasnip")
-local select_opts = { behavior = cmp.SelectBehavior.Select }
-
-cmp.setup({
-
-	mapping = cmp.mapping.preset.insert({
-		["<C-b>"] = cmp.mapping.scroll_docs(-4),
-		["<C-f>"] = cmp.mapping.scroll_docs(4),
-		["<C-Space>"] = cmp.mapping.complete(),
-		["<C-e>"] = cmp.mapping.abort(),
-		["<CR>"] = cmp.mapping.confirm({ select = true }),
-		["<Up>"] = cmp.mapping.select_prev_item(select_opts),
-		["<Down>"] = cmp.mapping.select_next_item(select_opts),
-		["<Tab>"] = cmp.mapping(function(fallback)
-			local col = vim.fn.col(".") - 1
-
-			if cmp.visible() then
-				cmp.select_next_item(select_opts)
-			elseif luasnip.jumpable(1) then
-				luasnip.jump(1)
-			elseif col == 0 or vim.fn.getline("."):sub(col, col):match("%s") then
-				fallback()
-			else
-				cmp.complete()
-			end
-		end, { "i", "s" }),
-		["<S-Tab>"] = cmp.mapping(function(fallback)
-			if cmp.visible() then
-				cmp.select_prev_item(select_opts)
-			elseif luasnip.jumpable(-1) then
-				luasnip.jump(-1)
-			else
-				fallback()
-			end
-		end, { "i", "s" }),
-	}),
-})
 
 ----------------------------------------------------------------------------------
 -- CodeCompanion / OpenCode

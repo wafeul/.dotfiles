@@ -91,7 +91,6 @@ scripts=(
     tmux.sh
     wallpaper.sh
     lsd.sh
-    treesitter.sh
     nvim.sh
     setup_environment.sh
     node.sh
