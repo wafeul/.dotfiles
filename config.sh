@@ -1,6 +1,6 @@
-# Function to check if DejaVuSansMono Nerd Font is installed
+# Function to check if a Nerd Font (patched, e.g. DejaVuSansMono Nerd Font) is installed
 has_nerdfont() {
-    fc-list | grep -qi "DejaVuSansMono Nerd Font"
+    fc-list | grep -qi "DejaVuSansMNerdFont"
 }
 
 if has_nerdfont; then

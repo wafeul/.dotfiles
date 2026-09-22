@@ -32,7 +32,7 @@ rm -f "$FONT_ZIP"
 fc-cache -fv "$FONT_DIR"
 
 # Confirm font install
-if fc-list | grep -i "$FONT_NAME" &>/dev/null; then
+if fc-list | grep -qi "DejaVuSansMNerdFont" &>/dev/null; then
     echo "$CHECK $FONT_NAME Nerd Font installed successfully."
     exit 0
 else
