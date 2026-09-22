@@ -9,7 +9,12 @@ return {
 		"nvim-telescope/telescope-ui-select.nvim",
 		config = function()
 			require("telescope").setup({
-                dynamic_preview_title = true,
+				defaults = {
+					preview = {
+						treesitter = false,
+					},
+				},
+				dynamic_preview_title = true,
 				extensions = {
 					["ui-select"] = {
 						require("telescope.themes").get_dropdown({}),
