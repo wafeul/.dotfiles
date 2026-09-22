@@ -9,6 +9,13 @@ return {
 			require("codecompanion").setup({
 				adapters = {
 					acp = {
+						opencode = function()
+							return require("codecompanion.adapters").extend("opencode", {
+								defaults = {
+									mcpServers = "inherit_from_config",
+								},
+							})
+						end,
 						codex = function()
 							return require("codecompanion.adapters").extend("codex", {
 								defaults = {
@@ -23,8 +30,8 @@ return {
 				interactions = {
 					chat = {
 						adapter = {
-							name = "codex",
-							model = "gpt-5.6-terra",
+							name = "opencode",
+							model = "opencode/big-pickle",
 						},
 					},
 				},
