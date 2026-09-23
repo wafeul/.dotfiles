@@ -12,9 +12,23 @@ TS_REQ="0.26.1"
 ts_version_ge() {
     [[ "$1" == "$2" || "$(printf '%s\n' "$1" "$2" | sort -V | head -n1)" == "$2" ]]
 }
+ts_find_bin() {
+    local cand
+    for cand in \
+        "$(command -v tree-sitter 2>/dev/null)" \
+        "$HOME/.cargo/bin/tree-sitter" \
+        /usr/local/bin/tree-sitter; do
+        if [[ -x "$cand" ]]; then
+            echo "$cand"
+            return 0
+        fi
+    done
+    return 1
+}
 ts_print_version() {
-    command -v tree-sitter &>/dev/null &&
-        tree-sitter --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -n1 || true
+    local bin
+    bin="$(ts_find_bin)" || return 1
+    "$bin" --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -n1
 }
 
 have="$(ts_print_version)"
@@ -70,11 +84,14 @@ if ! cargo install tree-sitter-cli --version ">=$TS_REQ"; then
     . "$HOME/.cargo/env"
     cargo install tree-sitter-cli --version ">=$TS_REQ"
 fi
-sudo install -m 755 "$HOME/.cargo/bin/tree-sitter" /usr/local/bin/tree-sitter
+if [[ -x "$HOME/.cargo/bin/tree-sitter" ]]; then
+    sudo install -m 755 "$HOME/.cargo/bin/tree-sitter" /usr/local/bin/tree-sitter
+fi
 
 have="$(ts_print_version)"
-if [[ -z "$have" ]] || ! ts_version_ge "$have" "$TS_REQ"; then
+if [[ -n "$have" ]] && ts_version_ge "$have" "$TS_REQ"; then
+    echo "$CHECK tree-sitter-cli installed from source: $have"
+else
     echo "$FAIL tree-sitter-cli installation failed."
     exit 1
 fi
-echo "$CHECK tree-sitter-cli installed from source: $have"
