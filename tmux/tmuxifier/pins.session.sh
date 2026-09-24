@@ -25,8 +25,10 @@ if initialize_session "pins"; then
     window_root "~/Projects/CRIMS/PHP_update/api_volumes/pins/laravel"
     new_window "BASH PINS"
     window_root "~/Projects/CRIMS/PHP_update/api_volumes/pins/laravel"
-    new_window "DB PINS-xtals"
+    new_window "DB XTALS"
     run_cmd "docker exec -it xtals-postgres psql -Ucrims xtals"
+    new_window "DB PLATES"
+    run_cmd "docker exec -it plates-postgres psql -Ucrims-plates agility"
     select_window 5
 
     # Create a new window inline within session layout definition.
